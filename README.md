@@ -73,7 +73,7 @@ Above method will return hash with currency code as key and rate as value. All r
 
 For Ccyconvertor::JSONRate we can specify the base currency
 ```ruby
-Ccyconvertor::OpenExchangeRate.rate_matrix('NZD')
+Ccyconvertor::JSONRate.rate_matrix('NZD')
 ```
  All rates returned would be with respect to NZD. If no parameter is given then base currency is USD by default
  Note: Ccyconvertor::YahooFinance do not support rate_matrix method
