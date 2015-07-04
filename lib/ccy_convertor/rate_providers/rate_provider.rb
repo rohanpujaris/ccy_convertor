@@ -27,7 +27,7 @@ module CcyConvertor
         cache_key = cache_key(request_url)
         return cache.read(cache_key) if cache.exist?(cache_key)
         response = HTTParty.get(request_url).parsed_response
-        puts cache.write(cache_key, response, expires_in: cache_duration)
+        cache.write(cache_key, response, expires_in: cache_duration)
         response
       end
 

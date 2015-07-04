@@ -29,20 +29,20 @@ Note:  Default rate provider is CcyConvertor::YahooFinance. You can change defau
 Rate provider can also be provided as a parameter. Rate provider is a class which provides rate by using rest_api
 ```ruby
 CcyConvertor.rate(from_ccy: 'USD', to_ccy: 'NZD', rate_provider: CcyConvertor::OpenExchangeRate)
-CcyConvertor.rate(from_ccy: 'USD', to_ccy: 'NZD', rate_provider: CcyConvertor::JSONRates)
+CcyConvertor.rate(from_ccy: 'USD', to_ccy: 'NZD', rate_provider: CcyConvertor::CurrencyLayer)
 ```
 You can also directly use rate provider class as follows.
 ```ruby
 CcyConvertor::OpenExchangeRate.rate('USD', 'INR') # will return USD/INR rate
 ```
-Note: CcyConvertor::OpenExchangeRate and CcyConvertor::JSONRate requires api_key. You can register at respective websites to get a api key
+Note: CcyConvertor::OpenExchangeRate and CcyConvertor::CurrencyLayer requires api_key. You can register at respective websites to get a api key
 
 #### Rate Providers
 | Rate provider class name  | rest api source  | Api key required   |
 |---|---|---|
 |  CcyConvertor::YahooFinance | 'yahoo.finance.xchange' table yql  | no  |
 | CcyConvertor::OpenExchangeRate  | www.openexchangerates.org  | yes  |
-| CcyConvertor::JSONRate  | www.jsonrates.com  | yes  |
+| CcyConvertor::CurrencyLayer  | www.currencylayer.com  | yes  |
 
 Api key can be provided individually to this classes as
 
@@ -65,18 +65,21 @@ Below code will use default rate provider. Default rate provider is configurable
 CcyConvertor.convert(from_ccy: 'USD', to_ccy: 'NZD', amount: 10)
 10.usd.to_nzd
 ```
-You can also get all the rates of currency with respect to particular base currency
+You can also get all currency rate  (rate matrix) with respect to USD in single request for OpenExchangeRate and CurrencyLayer rate provider
 ```ruby
 Ccyconvertor::OpenExchangeRate.rate_matrix
+Ccyconvertor::CurrencyLayer.rate_matrix
 ```
 Above method will return hash with currency code as key and rate as value. All rates would be with respect to USD. OpenExchangeRate do not allow us to specify other base currency and USD is always the base currency.
 
-For Ccyconvertor::JSONRate we can specify the base currency
+While For Ccyconvertor::CurrencyLayer we can specify the base currency
 ```ruby
-Ccyconvertor::JSONRate.rate_matrix('NZD')
+Ccyconvertor::CurrencyLayer.rate_matrix('NZD')
 ```
  All rates returned would be with respect to NZD. If no parameter is given then base currency is USD by default
- Note: Ccyconvertor::YahooFinance do not support rate_matrix method
+ Note:
+ You cannot provide base currency for free account at currencylayer.com. By defualt base currency will be USD. You need a paid account at currencylayer.com to supply base currency
+ Ccyconvertor::YahooFinance do not support rate_matrix method
 
 ## Configuration
 
@@ -84,7 +87,7 @@ You can configure following parameters
 
 1. default_rate-provider: Default rate provider is the rate provider which is used when no rate provider is species. Rate provider is a api service that this gem uses to provide rate. By default default rate provider is CcyConvertor::YahooFinance. Check rate providers details [here](#rate-providers)
 
-2. api_keys: CcyConvertor::OpenExchangeRate and CcyConvertor::JSONRate provider requires api_key. You can register at there respective sites to get the api_key
+2. api_keys: CcyConvertor::OpenExchangeRate and CcyConvertor::CurrencyLayer provider requires api_key. You can register at there respective sites to get the api_key
 
 3. cache_duration: specifies the time for which the response would be cached. By default this time is zero seconds i.e no caching is done by default. If cache_duration is 60 seconds and if you want a exchange rate of USD/INR multiple times in your application, request to rate provider would be made only once in 60 seconds and after 60 seconds next request would be made.
 ActiveSupport::Cache is used for caching
@@ -98,15 +101,15 @@ Sample configuration:
 CcyConvertor.configure do |config|
   config.round_up_rate = 4
   config.round_up_amount = 4
-  config.default_rate_provider = CcyConvertor::JSONRate
+  config.default_rate_provider = CcyConvertor::CurrencyLayer
   config.api_keys = {
     open_exchange_rate: 'XXXXXXXXX',
-    json_rate: 'XXXXXX'
+    currency_layer: 'XXXXXX'
   }
   config.cache_duration = {
     open_exchange_rate: 20,
     yahoo_finance: 30,
-    json_rate: 20
+    currency_layer: 20
   }
 end
 ```
@@ -151,7 +154,7 @@ Above method should return url for geting exchange rate between from_ccy and to_
 ```ruby
 rate(from_ccy, to_ccy)
 ```
-Above method should return exchange rate(Numeric type) between from_ccy and to_ccy. You can call ```rate_response(from_ccy, to_ccy)``` inside ```rate(from_ccy, to_ccy)``` to get response from url returned by ```rest_url_for_rate(from_ccy, to_ccy)``` 
+Above method should return exchange rate(Numeric type) between from_ccy and to_ccy. You can call ```rate_response(from_ccy, to_ccy)``` inside ```rate(from_ccy, to_ccy)``` to get response from url returned by ```rest_url_for_rate(from_ccy, to_ccy)```
 
 Now you can directly use new rate provider added by you as an existing rate provider present in the gem. You can also use all the cofiguration present for th rate provider. If rate provider added by you require api_key, you can provide it as metioned in configurtion section.
 If you want to use api_key inside you rate provider class, you can use class method api_key to access it.

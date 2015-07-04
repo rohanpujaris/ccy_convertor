@@ -14,7 +14,7 @@ require 'ccy_convertor/process_and_validate_option'
 require 'ccy_convertor/rate_providers/rate_provider'
 require 'ccy_convertor/rate_providers/yahoo_finance'
 require 'ccy_convertor/rate_providers/open_exchange_rate'
-require 'ccy_convertor/rate_providers/json_rate'
+require 'ccy_convertor/rate_providers/currency_layer'
 
 module CcyConvertor
   class << self
