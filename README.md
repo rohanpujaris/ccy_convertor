@@ -79,8 +79,7 @@ Ccyconvertor::CurrencyLayer.rate_matrix('NZD')
  All rates returned would be with respect to NZD. If no parameter is given then base currency is USD by default
  
  Note:
- You cannot provide base currency for free account at currencylayer.com. By defualt base currency will be USD. You need a paid account at currencylayer.com to supply base currency
- Ccyconvertor::YahooFinance do not support rate_matrix method
+ You cannot provide base currency for free account at currencylayer.com. By defualt base currency will be USD. You need a paid account at currencylayer.com to supply base currency. And Ccyconvertor::YahooFinance do not support rate_matrix method
 
 ## Configuration
 
