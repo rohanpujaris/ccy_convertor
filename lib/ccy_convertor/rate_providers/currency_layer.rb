@@ -6,8 +6,13 @@ module CcyConvertor
       end
 
       def rate_matrix(base_ccy = nil)
-        rates = rate_matrix_response(base_ccy)['quotes']
-        rates.inject({}) { |acc, (k, v)| acc[k[3, 3]] = v; acc }
+        rate_matrix_response = rate_matrix_response(base_ccy)
+        if error = rate_matrix_response['error']
+          raise CcyConvertor::ResponseInvalid, error['info']
+        end
+        rate_matrix_response['quotes'].inject({}) do |acc, (k, v)|
+          acc[k[3, 3]] = v; acc
+        end
       end
     end
   end

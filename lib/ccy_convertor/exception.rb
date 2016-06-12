@@ -6,4 +6,6 @@ module CcyConvertor
   class InvalidCurrencyCode < StandardError; end
 
   class CurrencyNotSupported < StandardError; end
+
+  class ResponseInvalid < StandardError; end
 end

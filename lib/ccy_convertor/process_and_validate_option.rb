@@ -1,11 +1,5 @@
 module CcyConvertor
   module ProcessAndValidateOption
-    def process_options!(options)
-      unless options[:money].nil?
-        options.merge!(from_ccy: options[:money].code, amount: options[:money].amount)
-      end
-    end
-
     def validate_options!(options)
       validate_presence_of_hash_keys!(options, [:from_ccy, :to_ccy, :amount])
       validate_amount!(options[:amount])

@@ -6,6 +6,10 @@ module CcyConvertor
       end
 
       def rate_matrix
+        rate_matrix_response = rate_matrix_response()
+        if rate_matrix_response['error']
+          raise CcyConvertor::ResponseInvalid, rate_matrix_response['description']
+        end
         rate_matrix_response['rates']
       end
     end

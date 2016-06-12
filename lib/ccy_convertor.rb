@@ -1,13 +1,10 @@
 require 'active_support/core_ext/string/inflections'
 require 'active_support/cache.rb'
-require 'httparty'
 require 'digest/sha1'
 
 require 'ccy_convertor/version'
 require 'ccy_convertor/configuration'
 require 'ccy_convertor/constant'
-require 'ccy_convertor/extension'
-require 'ccy_convertor/money'
 require 'ccy_convertor/exception'
 require 'ccy_convertor/rate_cache'
 require 'ccy_convertor/process_and_validate_option'
@@ -19,7 +16,6 @@ require 'ccy_convertor/rate_providers/currency_layer'
 module CcyConvertor
   class << self
     def rate(options)
-      RateProvider.process_options!(options)
       RateProvider.validate_presence_of_hash_keys!(options, [:from_ccy, :to_ccy])
       rate = rate_provider(options).rate(options[:to_ccy], options[:from_ccy])
       return rate if CcyConvertor.configuration.round_up_rate.nil?

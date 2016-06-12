@@ -57,13 +57,11 @@ You can convert money from one currency to another in following ways
 Below code will use rate provided from www.openexchangerates.org
 ```ruby
 CcyConvertor::OpenExchangeRate.convert(from_ccy: 'USD', to_ccy: 'NZD', amount: 10)
-10.usd.to_nzd(rate_provider: Ccyconvertor::OpenExchangeRate)
 ```
 
 Below code will use default rate provider. Default rate provider is configurable . Check [configuration section](#configuration)
 ```ruby
 CcyConvertor.convert(from_ccy: 'USD', to_ccy: 'NZD', amount: 10)
-10.usd.to_nzd
 ```
 You can also get all currency rate  (rate matrix) with respect to USD in single request for OpenExchangeRate and CurrencyLayer rate provider
 ```ruby
@@ -77,7 +75,7 @@ While For Ccyconvertor::CurrencyLayer we can specify the base currency
 Ccyconvertor::CurrencyLayer.rate_matrix('NZD')
 ```
  All rates returned would be with respect to NZD. If no parameter is given then base currency is USD by default
- 
+
  Note:
  You cannot provide base currency for free account at currencylayer.com. By defualt base currency will be USD. You need a paid account at currencylayer.com to supply base currency. And Ccyconvertor::YahooFinance do not support rate_matrix method
 

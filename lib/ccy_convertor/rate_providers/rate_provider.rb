@@ -1,3 +1,6 @@
+require 'net/http'
+require 'json'
+
 module CcyConvertor
   class RateProvider
     extend CcyConvertor::RateCache
@@ -26,7 +29,8 @@ module CcyConvertor
       def response_hash(request_url)
         cache_key = cache_key(request_url)
         return cache.read(cache_key) if cache.exist?(cache_key)
-        response = HTTParty.get(request_url).parsed_response
+
+        response = JSON.parse(Net::HTTP.get(URI(request_url)))
         cache.write(cache_key, response, expires_in: cache_duration)
         response
       end
@@ -47,7 +51,6 @@ module CcyConvertor
       alias :rate :rate_from_rate_matrix
 
       def convert(options)
-        process_options!(options)
         validate_options!(options)
         converted_rate = options[:amount] * rate(options[:to_ccy], options[:from_ccy])
         return converted_rate if CcyConvertor.configuration.round_up_amount.nil?
